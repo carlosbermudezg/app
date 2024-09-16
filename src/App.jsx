@@ -25,7 +25,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route>
-          <Route path="/login" element={<Login></Login>} />
+          <Route path="/" element={<Login></Login>} />
           <Route path="/register" element={<Register></Register>} />
         </Route>
         <Route element={<ProtectedRoutes isAuth={true} redirectTo="/login" />}>
