@@ -1,0 +1,31 @@
+body {
+    margin: 0 auto;
+}
+.container-logo-lopez {
+    background-color: #112f8f;
+    display: flex;
+    justify-content: center;
+}
+.logo-lopez {
+    max-width: 300px;
+    min-width: 250px;
+}
+.container-logo-moderna {
+    display: flex;
+    justify-content: center;
+}
+.logo-moderna {
+    max-width: 300px;
+    min-width: 250px;
+}
+.text-center {
+    text-align: center;
+}
+.showPassword {
+    position: absolute;
+    right: 10px;
+    top: 3px;
+}
+.group-inputs {
+    padding: 10px;
+}
