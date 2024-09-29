@@ -12,7 +12,7 @@ const SnackBar = ({open, message, severity, setOpen})=> {
 
   return (
     <div>
-      <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={1500} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <Alert
           onClose={handleClose}
           severity={severity}

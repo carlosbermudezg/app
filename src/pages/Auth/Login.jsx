@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -12,16 +12,22 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormControl from '@mui/material/FormControl';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 import SnackBar from "../../components/subcomponets/Snackbar";
 import CustomButton from "../../components/subcomponets/CustomButton";
+import Loading from "../../components/subcomponets/Loading";
 
 import { useNavigate } from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../../store/slices/userData.slice";
+import { verifyTokenThunk } from "../../store/slices/userData.slice";
 
 const Login = ()=>{
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const isAuth = useSelector( state => state.isAuth )
 
     const [open, setOpen] = useState(false)
     const [severity, setSeverity] = useState("error")
@@ -35,6 +41,22 @@ const Login = ()=>{
 
     const [incorrectUser, setIncorrectUser] = useState(false)
     const [incorrectPass, setIncorrectPass] = useState(false)
+
+    useEffect(()=>{
+        const user = localStorage.getItem("user")
+        if(user){
+            const userParsed = JSON.parse(user)
+            const token = userParsed.token
+            dispatch(verifyTokenThunk(token))
+        }
+        console.log("verificando token")
+        if(isAuth){
+            navigate("products")
+            console.log("está autenticado")
+        }else{
+            console.log("no esta autenticado")
+        }
+    },[isAuth])
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {
@@ -56,6 +78,11 @@ const Login = ()=>{
             .then( (response)=> {
                 setIncorrectUser(false)
                 setIncorrectPass(false)
+                dispatch(setUserData(response.data))
+                setTimeout(()=>{
+                    localStorage.setItem("user", JSON.stringify(response.data))
+                    navigate("/products")
+                },1000)
             } )
             .catch( (error)=> {
                 setIncorrectUser(false)
@@ -63,7 +90,7 @@ const Login = ()=>{
                 console.log(error.response.data.error)
                 if(error.response.data.error == 'invalid credentials user'){
                     setTimeout(()=>{
-                        setMessage(error.response.data.error)
+                        setMessage("Correo incorrecto")
                         setSeverity("error")
                         setOpen(true)
                         setIncorrectUser(true)
@@ -71,7 +98,7 @@ const Login = ()=>{
                 }
                 if(error.response.data.error == 'invalid credentials pass'){
                     setTimeout(()=>{
-                        setMessage(error.response.data.error)
+                        setMessage("Contraseña incorrecta")
                         setSeverity("error")
                         setOpen(true)
                         setIncorrectPass(true)
@@ -82,21 +109,9 @@ const Login = ()=>{
             setLoading(false)
         },1000)
     }
-    // const VerifyLogin = async() =>{
-    //     const token = 'token'
-    //     await axios.get(`${process.env.API_URL}/users/validateToken?token=${token}`)
-    //         .then(response => {
-    //             if(response.data.isValid == true){
-    //                 navigation.navigate('Main')
-    //             }else{
-    //                 console.log("token no valido")
-    //             }
-    //         })
-    //         .catch(err=> console.log(err))
-    // }
 
     return(
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
             <Grid container spacing={0.5} minHeight={160}>
                 <Grid size={12}>
                     <Stack spacing={2}>
@@ -140,7 +155,7 @@ const Login = ()=>{
                         </FormControl>
                         {
                             loading ? 
-                                <CircularProgress color="secondary" style={{alignSelf:'center'}} /> : 
+                                <Loading color="secondary" /> : 
                                 <>
                                 <CustomButton text="Iniciar Sesión" variant="contained" onClick={handleLogin}></CustomButton>
                                 <CustomButton text="Registrarse" variant="outlined" onClick={()=> navigate('/register')}></CustomButton>
@@ -157,11 +172,11 @@ const Login = ()=>{
                         <Typography variant="caption" className="text-center" component="h2">
                             Farmacias López y Modernas 2024.
                         </Typography>
+                        <SnackBar open={open} severity={severity} message={message} setOpen={setOpen}></SnackBar>
                     </Stack>
                 </Grid>
                 <Grid size={4}></Grid>
             </Grid>
-            <SnackBar open={open} severity={severity} message={message} setOpen={setOpen}></SnackBar>
         </Box>
     )
 }
