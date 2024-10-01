@@ -42,5 +42,4 @@ const categories = [
         icon: 'star-half-full'
     }
 ]
-
 export default categories
