@@ -28,7 +28,6 @@ export const logoutThunk = ()=> async(dispatch)=>{
   dispatch(setUserData({}))
   dispatch(setIsAuth(false))
   localStorage.removeItem("user")
-  console.log("aqui")
 }
 
 export const { setUserData } = userDataSlice.actions;

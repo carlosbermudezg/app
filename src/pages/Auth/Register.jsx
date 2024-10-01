@@ -237,7 +237,7 @@ export default function Register() {
         "direccion": direccion,
         "ciudad" : ciudad,
         "type": userType,
-        "brands": JSON.stringify(selectedBrands),
+        "brands": userType == "2" ? JSON.stringify(selectedBrands) : "[]",
         "zones": JSON.stringify(zonesSelected)
       }
       const reg = await register(data)
@@ -495,7 +495,7 @@ export default function Register() {
                   </StepContent>
               </Step>
             </Stepper>
-            {activeStep === 4 && (
+            {(activeStep === 4 || (activeStep === 3 && userType == "1")) && (
                 <Paper square elevation={0} sx={{ p: 3 }}>
                 {
                   loading ?

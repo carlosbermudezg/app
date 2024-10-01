@@ -1,16 +1,17 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBack from '@mui/icons-material/ArrowBack';
+import LocationOn from '@mui/icons-material/LocationOn';
 import { useNavigate } from 'react-router-dom';
 import { setIsDrawerOpen } from '../store/slices/isDrawerOpen.slice';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import routesTitle from './../utils/routes'
+import { setIsZoneSelectorOpen } from '../store/slices/isZoneSelectorOpen.slice';
+import { useSelector } from 'react-redux';
 
 export default function Navbar({type, to}) {
 
@@ -18,6 +19,7 @@ export default function Navbar({type, to}) {
     const dispatch = useDispatch()
     const location = useLocation()
     const title = routesTitle.find( (obj)=> obj.pathname == location.pathname )
+    const selectedZone = useSelector( state => state.selectedZone )
 
     return (
         <section className='navbar'>
@@ -33,12 +35,54 @@ export default function Navbar({type, to}) {
                                 <MenuIcon />
                             </IconButton>
                         }
-                    <Typography variant="h6" color="inherit" component="div">
-                        {title.title}
-                    </Typography>
+                    <div className='navbar-title'>
+                        <Typography variant="h6" color="inherit" component="div">
+                            {title.title}
+                        </Typography>
+                        {
+                            title.title == "Productos" &&
+                            <small>
+                                {
+                                    selectedZone.name
+                                }
+                            </small>
+                        }
+                    </div>
+                    <div className='icons-group'>
+                        {
+                            title.title === "Productos" &&
+                            <>
+                                <IconButton
+                                    size="large"
+                                    aria-label="account of current user"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    onClick={()=>dispatch( setIsZoneSelectorOpen(true) )}
+                                    color="inherit"
+                                >
+                                    <LocationOn />
+                                </IconButton>
+                            </>
+                        }
+                        {
+                            title.title === "Recetas" &&
+                            <>
+                                <IconButton
+                                    size="large"
+                                    aria-label="account of current user"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    color="inherit"
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </>
+                        }
+                    </div>
                     </Toolbar>
                 </AppBar>
             </div>
         </section>
     );
 }
+  

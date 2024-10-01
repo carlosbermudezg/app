@@ -45,13 +45,16 @@ body {
     z-index: 100;
     width: 100%;
     height: 48px;
-    background-color: red;
 }
 .navbar-container {
     width: 100%;
     height: 48px;
     position: fixed;
     background-color: green;
+}
+.navbar-title {
+    display: flex;
+    flex-direction: column;
 }
 .sidebar-card {
     display: flex;
@@ -197,4 +200,11 @@ body {
 .processing-data {
     display: flex;
     align-items: center;
+}
+.title {
+    font-weight: bold;
+}
+.icons-group {
+    position: absolute;
+    right: 5px;
 }

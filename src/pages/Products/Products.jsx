@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { useSelector } from 'react-redux';
 import Paper from '@mui/material/Paper';
 import PaginationComponent from '../../components/PaginationComponent';
 import InputBase from '@mui/material/InputBase';
@@ -8,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import ProductsCard from "../../components/ProductsCard";
 import categories from "../../utils/Categories";
-
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -16,11 +16,11 @@ import StarBorder from "@mui/icons-material/StarBorder";
 import StarHalf from "@mui/icons-material/StarHalf";
 import StarRate from "@mui/icons-material/StarRate";
 import AllInclusive from "@mui/icons-material/AllInclusive";
+import SelectZones from "../../components/SelectZones";
 
 const Products = ()=>{
 
     const [value, setValue] = useState(0);
-
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [search, setSearch] = useState("")
@@ -28,21 +28,21 @@ const Products = ()=>{
     const [inputValue, setInputValue] = useState("")
     const [products, setProducts] = useState([])
     const user = JSON.parse(localStorage.getItem("user"));
+    const selectedZone = useSelector( state => state.selectedZone )
 
     useEffect(()=>{
-        axios.get(`${import.meta.env.VITE_APISHEYLA_URL}/products?page=${page}&limit=20&search=${search}&category=${category}`, {
+        axios.get(`${import.meta.env.VITE_APISHEYLA_URL}/products?page=${page}&limit=20&search=${search}&category=${category}&zone=${selectedZone.bodega}`, {
             headers: {
               Authorization: `Bearer ${user.token}`
             }
           })
           .then( response => {
-            console.log(response.data)
             setProducts( response.data.data )
             setPage( response.data.pagination.page )
             setTotalPages( response.data.pagination.totalPages )
           } )
           .catch( error => console.log( error ) )
-    },[page, search, category])
+    },[page, search, category, selectedZone])
 
     const handleSearch = ()=>{
         setSearch(inputValue)
@@ -101,6 +101,7 @@ const Products = ()=>{
             <section className='pagination-container'>
                 <PaginationComponent page={page} totalPages={totalPages} setPage={setPage}></PaginationComponent>
             </section>
+            <SelectZones></SelectZones>
         </>
     )
 }

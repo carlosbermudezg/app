@@ -49,12 +49,8 @@ const Login = ()=>{
             const token = userParsed.token
             dispatch(verifyTokenThunk(token))
         }
-        console.log("verificando token")
         if(isAuth){
             navigate("products")
-            console.log("está autenticado")
-        }else{
-            console.log("no esta autenticado")
         }
     },[isAuth])
 
@@ -87,7 +83,6 @@ const Login = ()=>{
             .catch( (error)=> {
                 setIncorrectUser(false)
                 setIncorrectPass(false)
-                console.log(error.response.data.error)
                 if(error.response.data.error == 'invalid credentials user'){
                     setTimeout(()=>{
                         setMessage("Correo incorrecto")

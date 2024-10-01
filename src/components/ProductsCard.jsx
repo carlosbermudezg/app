@@ -3,12 +3,20 @@ import StarBorder from "@mui/icons-material/StarBorder";
 import StarHalf from "@mui/icons-material/StarHalf";
 import StarRate from "@mui/icons-material/StarRate";
 import AllInclusive from "@mui/icons-material/AllInclusive";
-import Divider from '@mui/material/Divider';
 import categories from '../utils/Categories';
+import { useSelector } from 'react-redux';
 
 const ProductsCard = ({ product })=>{
 
     const filterCategory = categories.find( element => product.CATEGORIA === element.id )
+    const selectedZone = useSelector( state => state.selectedZone )
+
+    const bodegas = JSON.parse(selectedZone.bodega)
+
+    const stock = bodegas.reduce((acc, current)=>{
+        const add = acc + Number(product[current])
+        return add
+    }, 0) || 0
 
     let cat = "0"
     let icon = <AllInclusive />
@@ -48,7 +56,7 @@ const ProductsCard = ({ product })=>{
             </section>
             <section className='productCard-footer'>
                 <Typography variant="caption" component="h2" textAlign="right">
-                    Stock : { product.CANTIDAD }
+                    Stock : { stock }
                 </Typography>
             </section>
         </div>
