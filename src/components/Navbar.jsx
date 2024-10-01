@@ -20,23 +20,25 @@ export default function Navbar({type, to}) {
     const title = routesTitle.find( (obj)=> obj.pathname == location.pathname )
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" color='secondary'>
-            <Toolbar variant="dense">
-                {
-                    type == 'back' ? 
-                    <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={()=> navigate(`${to}`)}>
-                        <ArrowBack />
-                    </IconButton> : 
-                    <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={()=> dispatch(setIsDrawerOpen(true))}>
-                        <MenuIcon />
-                    </IconButton>
-                }
-            <Typography variant="h6" color="inherit" component="div">
-                {title.title}
-            </Typography>
-            </Toolbar>
-        </AppBar>
-        </Box>
+        <section className='navbar'>
+            <div className='navbar-container'>
+                <AppBar position="static" color='secondary'>
+                    <Toolbar variant="dense">
+                        {
+                            type == 'back' ? 
+                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={()=> navigate(`${to}`)}>
+                                <ArrowBack />
+                            </IconButton> : 
+                            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={()=> dispatch(setIsDrawerOpen(true))}>
+                                <MenuIcon />
+                            </IconButton>
+                        }
+                    <Typography variant="h6" color="inherit" component="div">
+                        {title.title}
+                    </Typography>
+                    </Toolbar>
+                </AppBar>
+            </div>
+        </section>
     );
 }
