@@ -6,7 +6,7 @@ import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
-import ProductsCard from "../../components/productsCard";
+import ProductsCard from "../../components/ProductsCard";
 import categories from "../../utils/Categories";
 
 import Box from '@mui/material/Box';
