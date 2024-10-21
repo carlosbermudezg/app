@@ -1,31 +1,45 @@
 const routesTitle = [
     {
         pathname : "/register",
-        title : "Registrarse"
+        title : "Registrarse",
+        icon : "back",
+        backNavigate : "/",
     },
     {
         pathname : "/products",
-        title : "Productos"
+        title : "Productos",
+        icon : "menu",
     },
     {
         pathname : "/buzon",
-        title : "Buzon"
+        title : "Buzon",
+        icon : "menu",
     },
     {
         pathname : "/recetas",
-        title : "Recetas"
+        title : "Recetas",
+        icon : "menu",
+    },
+    {
+        pathname : "/recetas/addreceta",
+        title : "Nueva Receta",
+        icon : "back",
+        backNavigate : "recetas",
     },
     {
         pathname : "/rendimiento",
-        title : "Rendimiento"
+        title : "Rendimiento",
+        icon : "menu",
     },
     {
         pathname : "/users",
-        title : "Usuarios"
+        title : "Usuarios",
+        icon : "menu",
     },
     {
         pathname : "/configuration",
-        title : "Configuración"
+        title : "Configuración",
+        icon : "menu",
     }
 ]
 

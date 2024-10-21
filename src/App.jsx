@@ -3,6 +3,7 @@ import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
 import Products from './pages/Products/Products'
 import Recetas from './pages/Recetas/Recetas'
+import AddReceta from "./pages/Recetas/AddReceta"
 import Rendimiento from './pages/Rendimiento/Rendimiento'
 import Buzon from './pages/Buzon/Buzon'
 import Users from './pages/Users/Users'
@@ -55,6 +56,11 @@ function App() {
             <Route path="/recetas" element={
               <ProtectedRoutes isAuth={isAuth && (permission == 1 || permission == 10)} redirectTo="/products">
                 <Recetas></Recetas>
+              </ProtectedRoutes>}
+            />
+            <Route path="/recetas/addreceta" element={
+              <ProtectedRoutes isAuth={isAuth && (permission == 1 || permission == 10)} redirectTo="/products">
+                <AddReceta></AddReceta>
               </ProtectedRoutes>}
             />
             <Route path="/rendimiento" element={
