@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -18,14 +17,16 @@ import { Avatar, Typography, Button } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setIsDrawerOpen } from '../store/slices/isDrawerOpen.slice';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Sidebar() {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const isDrawerOpen = useSelector( state => state.isDrawerOpen )
-  const user = JSON.parse(localStorage.getItem("user"));
-  const permission = user.user.type
+  const token = JSON.parse(localStorage.getItem("token"));
+  const user = token ? jwtDecode(token) : {}
+  const permission = user?.user?.type
 
   const toggleDrawer = (newOpen) => () => {
     dispatch(setIsDrawerOpen(newOpen));
@@ -114,10 +115,10 @@ export default function Sidebar() {
           </div>
           <div className='userdata'>
             <Typography variant="caption" component="h2">
-              { user.user.name }
+              { user?.user?.name }
             </Typography>
             <Typography variant="caption" component="h2">
-              { user.user.username }
+              { user?.user?.username }
             </Typography>
           </div>
         </section>

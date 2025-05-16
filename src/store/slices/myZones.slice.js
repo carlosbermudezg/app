@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { setSelectedZone } from './selectedZone.slice';
+import { jwtDecode } from 'jwt-decode'
 
 export const myZonesSlice = createSlice({
   name: 'myZones',
@@ -19,9 +20,9 @@ function replace(texto) {
 }
 
 export const getZoneSelectedThunk= () => (dispatch) =>{
-    const user = JSON.parse(localStorage.getItem("user"))
+    const token = JSON.parse(localStorage.getItem("token"));
+    const user = token ? jwtDecode(token) : {}
     const myzones = replace(user.user.zones)
-    const token = user.token
 
     axios.get(`${import.meta.env.VITE_API_URL}/zones/getMyZones?zones=${myzones}`, {
       headers: {

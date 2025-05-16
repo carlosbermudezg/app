@@ -17,6 +17,7 @@ import StarHalf from "@mui/icons-material/StarHalf";
 import StarRate from "@mui/icons-material/StarRate";
 import AllInclusive from "@mui/icons-material/AllInclusive";
 import SelectZones from "../../components/SelectZones";
+import { jwtDecode } from 'jwt-decode'
 
 const Products = ()=>{
 
@@ -27,13 +28,14 @@ const Products = ()=>{
     const [category, setCategory] = useState([])
     const [inputValue, setInputValue] = useState("")
     const [products, setProducts] = useState([])
-    const user = JSON.parse(localStorage.getItem("user"));
+    const token = JSON.parse(localStorage.getItem("token"));
+    const user = token ? jwtDecode(token) : {}
     const selectedZone = useSelector( state => state.selectedZone )
 
     useEffect(()=>{
         axios.get(`${import.meta.env.VITE_APISHEYLA_URL}/products?page=${page}&limit=20&search=${search}&category=${category}&zone=${selectedZone.bodega}`, {
             headers: {
-              Authorization: `Bearer ${user.token}`
+              Authorization: `Bearer ${token}`
             }
           })
           .then( response => {

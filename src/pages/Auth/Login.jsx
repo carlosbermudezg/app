@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -18,16 +18,9 @@ import Loading from "../../components/subcomponets/Loading";
 
 import { useNavigate } from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
-import { setUserData } from "../../store/slices/userData.slice";
-import { verifyTokenThunk } from "../../store/slices/userData.slice";
-
 const Login = ()=>{
 
     const navigate = useNavigate()
-    const dispatch = useDispatch()
-
-    const isAuth = useSelector( state => state.isAuth )
 
     const [open, setOpen] = useState(false)
     const [severity, setSeverity] = useState("error")
@@ -41,18 +34,6 @@ const Login = ()=>{
 
     const [incorrectUser, setIncorrectUser] = useState(false)
     const [incorrectPass, setIncorrectPass] = useState(false)
-
-    useEffect(()=>{
-        const user = localStorage.getItem("user")
-        if(user){
-            const userParsed = JSON.parse(user)
-            const token = userParsed.token
-            dispatch(verifyTokenThunk(token))
-        }
-        if(isAuth){
-            navigate("products")
-        }
-    },[isAuth])
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {
@@ -74,9 +55,8 @@ const Login = ()=>{
             .then( (response)=> {
                 setIncorrectUser(false)
                 setIncorrectPass(false)
-                dispatch(setUserData(response.data))
                 setTimeout(()=>{
-                    localStorage.setItem("user", JSON.stringify(response.data))
+                    localStorage.setItem("token", JSON.stringify(response.data))
                     navigate("/products")
                 },1000)
             } )
@@ -165,7 +145,7 @@ const Login = ()=>{
                 <Grid size={4}>
                     <Stack spacing={2}>
                         <Typography variant="caption" className="text-center" component="h2">
-                            Farmacias López y Modernas 2024.
+                            Una app creada con el corazón.
                         </Typography>
                         <SnackBar open={open} severity={severity} message={message} setOpen={setOpen}></SnackBar>
                     </Stack>

@@ -1,6 +1,7 @@
 body {
     margin: 0 auto;
     height: 100vh;
+    overflow: 'hidden';
 }
 #root {
     height: inherit;
@@ -44,7 +45,7 @@ body {
     position: relative;
     z-index: 100;
     width: 100%;
-    height: 48px;
+    height: 8%;
 }
 .navbar-container {
     width: 100%;
@@ -364,4 +365,34 @@ div.MuiTreeItem-content {
 }
 .addreceta-container {
     width: 100%;
+}
+.imagen-receta {
+    color: #85118f;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.rendimiento-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+.rendimiento-wrap {
+    width: 350px;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+.date-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.filters {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }

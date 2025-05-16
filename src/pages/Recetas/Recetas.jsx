@@ -20,6 +20,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 import ModalReceta from "../../components/ModalReceta";
+import moment from "moment";
+import { jwtDecode } from "jwt-decode";
 
 function sleep(duration) {
     return new Promise((resolve) => {
@@ -46,8 +48,8 @@ const Recetas = ()=>{
     const [recetas, setRecetas] =useState([])
     const [doctors, setDoctors] = useState([])
     const [selectedDoctor, setSelectedDoctor] = useState({})
-    const user = JSON.parse(localStorage.getItem("user"));
-    const token = user.token;
+    const token = JSON.parse(localStorage.getItem("token"));
+    const user = token ? jwtDecode(token) : {}
     
     const handleOpen = () => {
         setOpen(true);
@@ -75,10 +77,10 @@ const Recetas = ()=>{
 
     useEffect(()=>{
         const getMonths = async()=>{
-            const usuario = user.user.type == 10 ? selectedDoctor.idusers : user.user.idusers
+            const usuario = user?.user?.type == 10 ? selectedDoctor.idusers : user?.user?.idusers
             await axios.get(`${import.meta.env.VITE_API_URL}/recetas/getByMonthUser?year=${selectedYear}&id=${usuario}`, { 
                 headers: {
-                    Authorization: `Bearer ${user.token}`
+                    Authorization: `Bearer ${token}`
                   } 
                 })
             .then( response => {
@@ -168,20 +170,21 @@ const Recetas = ()=>{
                         </FormControl>
                     </Box>
                     {
-                        user.user.type == 10 &&
+                        user?.user?.type == 10 &&
                         <Autocomplete
                             sx={{ width: 300 }}
                             open={open}
                             onOpen={handleOpen}
                             onClose={handleClose}
                             isOptionEqualToValue={(option, value) => option.name === value.name}
-                            getOptionLabel={(option) => option.name}
+                            getOptionLabel={(option) => `${option.name}${option.idusers}`}
                             onChange={(e,value)=> setSelectedDoctor(value)}
                             options={options}
                             loading={loading}
-                            renderInput={(params) => {
+                            renderInput={(params, index) => {
                                 return(
                                     <TextField
+                                        key={index}
                                         {...params}
                                         label="Médico"
                                         slotProps={{
@@ -216,7 +219,7 @@ const Recetas = ()=>{
                                 const total = receta.recetas.reduce((totalAcc, element) => {
                                     const medicamentos = JSON.parse(element.medicamentos);
                                     const value = medicamentos.reduce((prev, curr) => {
-                                        const earn = ((curr.cantidad * curr.costo * curr.porcentaje) / 100).toFixed(2);
+                                        const earn = ((curr.cantidad * curr.COSTO * curr.porcentaje) / 100).toFixed(2);
                                         return prev + Number(earn);
                                     }, 0);
 
@@ -234,7 +237,7 @@ const Recetas = ()=>{
                                 }, []);
                                 
                                 return(
-                                    <div className="receta-group">
+                                    <div key={index} className="receta-group">
                                         <div className="receta-actions">
                                             {
                                                 unpaid.length > 0 && user.user.type == 10 &&
@@ -252,15 +255,12 @@ const Recetas = ()=>{
                                                     receta.recetas.map((element, recetaIndex)=>{
                                                         const medicamentos = JSON.parse(element.medicamentos)
                                                         const value = medicamentos.reduce((prev, curr)=>{
-                                                            const earn = ((curr.cantidad * curr.costo * curr.porcentaje) / 100).toFixed(2)
+                                                            const earn = ((curr.cantidad * curr.COSTO * curr.porcentaje) / 100).toFixed(2)
                                                             return prev + Number(earn)
                                                         },0)
 
                                                         const status = element.pay == 1 ? "Pagada" : "No Pagada"
-
-                                                        const fechaHora = new Date(element.date);
-                                                        const fecha = fechaHora.toISOString().split('T')[0];
-
+                                                        const fecha = moment(element.date, "YYYY-MM-DD HH:mm:ss.SSSSSS").format("YYYY-MM-DD");
                                                         return(
                                                             <div className="card-receta" key={recetaIndex}>
                                                                 <div className="card-receta-body">

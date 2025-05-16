@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import productsSlice from './slices/products.slice'
 import userDataSlice from './slices/userData.slice'
-import isAuthSlice from './slices/isAuth.slice'
 import isDrawerOpenSlice from './slices/isDrawerOpen.slice'
 import selectedZoneSlice from './slices/selectedZone.slice'
 import isZoneSelectorOpenSlice from './slices/isZoneSelectorOpen.slice'
@@ -11,7 +10,6 @@ export const store = configureStore({
     reducer: {
           products: productsSlice,
           userData: userDataSlice,
-          isAuth: isAuthSlice,
           isDrawerOpen : isDrawerOpenSlice,
           selectedZone : selectedZoneSlice,
           isZoneSelectorOpen : isZoneSelectorOpenSlice,

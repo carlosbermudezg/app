@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import UserCard from '../../components/UserCard';
+import { jwtDecode } from 'jwt-decode';
 
 const Users = ()=>{
 
@@ -16,13 +17,14 @@ const Users = ()=>{
     const [inputValue, setInputValue] = useState("")
     const [render, setRender] = useState(false)
     const [users, setUsers] = useState([])
-    const user = JSON.parse(localStorage.getItem("user"));
+    const token = JSON.parse(localStorage.getItem("token"));
+    const user = token ? jwtDecode(token) : {}
 
     useEffect(()=>{
         const getUsers = async()=>{
             axios.get(`${import.meta.env.VITE_API_URL}/users?page=${page}&limit=20&search=${search}`, {
                 headers: {
-                  Authorization: `Bearer ${user.admin_token}`
+                  Authorization: `Bearer ${token}`
                 }
               })
             .then( res => {
@@ -40,7 +42,7 @@ const Users = ()=>{
         const state = status === 1 ? 0 : 1
         await axios.get(`${import.meta.env.VITE_API_URL}/users/changeStatus?id=${userId}&state=${state}`,{
             headers: {
-              Authorization: `Bearer ${ user.admin_token }`
+              Authorization: `Bearer ${ token }`
             }
           })
             // .then( response =>{

@@ -13,22 +13,51 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useState, Fragment } from 'react';
 
-const ProductsCardReceta = ({ product })=>{
+const ProductsCardReceta = ({ product, setSelected })=>{
 
     const [open, setOpen] = useState(false);
-    const [cantidad, setCantidad] = useState(null)
+    const [cantidad, setCantidad] = useState(0)
+    const [msgCantidad, setMsgCantidad] = useState("")
 
     const handleClickOpen = () => {
         setOpen(true);
+        setCantidad(0)
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
+    const filterCategory = categories.find( element => product.CATEGORIA === element.id )
+    
+    const handleSetCantidad = (cantidad, product)=>{
+        if(cantidad < 1){
+            setMsgCantidad("La cantidad debe ser mayor")
+        }else{
+            product.cantidad = cantidad
+            product.porcentaje = filterCategory.value
+            addProduct(product)
+        }
+    }
+    
+
+    const addProduct = (product)=>{
+        setSelected((prevItems) => {
+            const exists = prevItems.some((item) => item.PRODUCTO === product.PRODUCTO);
+      
+            if (exists) {
+              return prevItems.map((item) =>
+                item.PRODUCTO === product.PRODUCTO ? { ...item, ...product } : item
+              );
+            } else {
+              return [...prevItems, product];
+            }
+        });
+        handleClose()
+    }
+
     const costo = Number(product.COSTO).toFixed(2)
 
-    const filterCategory = categories.find( element => product.CATEGORIA === element.id )
 
     let cat = "0"
     let icon = <AllInclusive />
@@ -85,11 +114,12 @@ const ProductsCardReceta = ({ product })=>{
                         <b>¿Está seguro que desea agregar este medicamento a la receta?</b><br></br>
                         - { product.PRODUCTO }
                         <TextField className='inputMedia' value={cantidad} type="number" size='small' placeholder='Cantidad' onChange={(e)=> setCantidad(e.target.value)}></TextField>
+                        <Typography variant="caption">{msgCantidad}</Typography>
                     </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                     <Button onClick={handleClose}>Cancelar</Button>
-                    <Button onClick={handleClose} autoFocus>
+                    <Button onClick={()=>handleSetCantidad(cantidad, product)} autoFocus>
                         Agregar
                     </Button>
                     </DialogActions>

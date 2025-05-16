@@ -13,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 import routesTitle from './../utils/routes'
 import { setIsZoneSelectorOpen } from '../store/slices/isZoneSelectorOpen.slice';
 import { useSelector } from 'react-redux';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Navbar({to}) {
 
@@ -21,7 +22,8 @@ export default function Navbar({to}) {
     const location = useLocation()
     const title = routesTitle.find( (obj)=> obj.pathname == location.pathname )
     const selectedZone = useSelector( state => state.selectedZone )
-    const user = JSON.parse(localStorage.getItem("user"))
+    const token = JSON.parse(localStorage.getItem("token"));
+    const user = token ? jwtDecode(token) : {}
 
     return (
         <section className='navbar'>
@@ -67,7 +69,7 @@ export default function Navbar({to}) {
                             </>
                         }
                         {
-                            title.title === "Recetas" && user.user.type == 10 &&
+                            title.title === "Recetas" && user?.user?.type == 10 &&
                             <>
                                 <IconButton
                                     size="large"
