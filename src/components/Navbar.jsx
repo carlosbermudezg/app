@@ -28,7 +28,7 @@ export default function Navbar({to}) {
     return (
         <section className='navbar'>
             <div className='navbar-container'>
-                <AppBar position="static" color='secondary'>
+                <AppBar position="static" color='secondary' sx={{height:'60px'}}>
                     <Toolbar variant="dense">
                         {
                             title.icon == 'back' ? 

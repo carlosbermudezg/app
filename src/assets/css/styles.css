@@ -45,13 +45,13 @@ body {
     position: relative;
     z-index: 100;
     width: 100%;
-    height: 8%;
+    height: 60px;
+    z-index: 99999;
 }
 .navbar-container {
     width: 100%;
-    height: 48px;
+    height: 60px;
     position: fixed;
-    background-color: green;
 }
 .navbar-title {
     display: flex;
@@ -72,6 +72,7 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 5px;
+    position: relative;
 }
 .userCard {
     width: 250px;
@@ -93,9 +94,8 @@ body {
     padding: 5px;
 }
 .searchUser {
-    margin: 10px;
-    justify-content: center;
-    display: flex;
+    padding: 10px 10px d0px 10px;
+    width: 100%;
 }
 .pagination-container {
     display: flex;
@@ -104,13 +104,14 @@ body {
     justify-content: center;
     align-items: center;
     position: relative;
+    z-index: 9999;
 }
 .pagination{
     display: flex;
     position: fixed;
     bottom: 0;
     border-radius: 5px 5px 0 0;
-    width: 320px;
+    width: 100%;
     justify-content: center;
     align-items: center;
     border: 0.5px solid #85118f;
@@ -120,7 +121,7 @@ body {
 .productCard {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 100%;
     height: 100px;
     position: relative;
     border: 0.5px solid #cecece;

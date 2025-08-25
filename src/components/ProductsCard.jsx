@@ -6,10 +6,9 @@ import AllInclusive from "@mui/icons-material/AllInclusive";
 import categories from '../utils/Categories';
 import { useSelector } from 'react-redux';
 
-const ProductsCard = ({ product })=>{
+const ProductsCard = ({ product, selectedZone })=>{
 
     const filterCategory = categories.find( element => product.CATEGORIA === element.id )
-    const selectedZone = useSelector( state => state.selectedZone )
 
     const bodegas = JSON.parse(selectedZone.bodega)
 
@@ -43,7 +42,7 @@ const ProductsCard = ({ product })=>{
             <section className='productCard-body'>
                 <div className='avatar'>
                     <Avatar
-                        sx={{ width: 24, height: 24, bgcolor: color, fontSize: 12 }}
+                        sx={{ width: 24, height: 24, bgcolor: color, fontSize: 12, padding: 2 }}
                     >
                         { cat }%
                     </Avatar>
@@ -56,7 +55,7 @@ const ProductsCard = ({ product })=>{
             </section>
             <section className='productCard-footer'>
                 <Typography variant="caption" component="h2" textAlign="right">
-                    Stock : { stock }
+                    <b> Disponibles: </b>{ stock }
                 </Typography>
             </section>
         </div>

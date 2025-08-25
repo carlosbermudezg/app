@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -7,21 +6,8 @@ import Dialog from '@mui/material/Dialog';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useDispatch, useSelector } from 'react-redux';
-import { setIsZoneSelectorOpen } from '../store/slices/isZoneSelectorOpen.slice';
-import { setSelectedZone } from '../store/slices/selectedZone.slice';
-import { getZoneSelectedThunk } from '../store/slices/myZones.slice';
 
-const SelectZones = ()=>{
-
-    const zones =  useSelector( state => state.myZones )
-    const dispatch = useDispatch()
-    const selectedZone = useSelector( state => state.selectedZone )
-    const isZoneSelectorOpen = useSelector( state => state.isZoneSelectorOpen )
-
-    useEffect(()=>{
-        dispatch(getZoneSelectedThunk())
-    },[])
+const SelectZones = ({zones, isZoneSelectorOpen = false, setIsZoneSelectorOpen, selectedZone, setSelectedZone})=>{
 
     return(
         <Dialog
@@ -34,22 +20,22 @@ const SelectZones = ()=>{
             <RadioGroup
                 aria-label="zone"
                 name="zone"
-                value={selectedZone.idzonas}
+                value={selectedZone?.idzonas}
             >
-                {zones.map((zone, index) => (
+                {zones?.map((zone, index) => (
                 <FormControlLabel
                     value={zone.idzonas}
                     key={index}
                     control={<Radio />}
                     label={zone.name}
-                    onClick={ ()=> dispatch( setSelectedZone(zone) ) }
+                    onClick={ ()=> setSelectedZone(zone)}
                 />
                 ))}
             </RadioGroup>
             </DialogContent>
             <DialogActions>
             <Button
-                onClick={()=>dispatch( setIsZoneSelectorOpen(false) )}
+                onClick={()=>setIsZoneSelectorOpen(false)}
             >Ok</Button>
             </DialogActions>
         </Dialog>

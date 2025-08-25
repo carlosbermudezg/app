@@ -5,6 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 dayjs.extend(isBetween);
 
@@ -26,8 +27,8 @@ export default function Rendimiento() {
   const [brands, setBrands] = useState([])
   const [doctors, setDoctors] = useState([])
   const [page, setPage] = useState(1)
-  const user = JSON.parse(localStorage.getItem("user"))
-  const token = user.token
+  const token = JSON.parse(localStorage.getItem("token"));
+  const user = token ? jwtDecode(token) : {}
 
   useEffect(()=>{
     // console.log(selectedDoctor)

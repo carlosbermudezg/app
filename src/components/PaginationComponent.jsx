@@ -7,7 +7,15 @@ const PaginationComponent = ({ page, totalPages, setPage })=>{
     };
     return(
         <section className="pagination">
-            <Pagination count={totalPages} size='small' page={page} onChange={handleChange} color='primary' />
+            <Pagination 
+                shape='rounded'
+                variant='outlined'
+                color='secondary'
+                count={totalPages}
+                size='small' 
+                page={page} 
+                onChange={handleChange}
+            />
         </section>
     )
 }
