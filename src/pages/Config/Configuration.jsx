@@ -1,6 +1,10 @@
+import Navbar from "../../components/Navbar"
 const Configuration = ()=>{
     return(
-        <section>Configuration</section>
+        <>
+            <Navbar></Navbar>
+            <section>Configuration</section>
+        </>
     )
 }
 

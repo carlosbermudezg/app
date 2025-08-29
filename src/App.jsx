@@ -6,8 +6,8 @@ import Products from './pages/Products/Products'
 import Recetas from './pages/Recetas/Recetas'
 import AddReceta from "./pages/Recetas/AddReceta"
 import Rendimiento from './pages/Rendimiento/Rendimiento'
-import ChatWindow from "./components/ChatWindow"
 import UserChat from "./components/UserChat"
+import Buzon from "./pages/Buzon/Buzon"
 import Users from './pages/Users/Users'
 import Configuration from './pages/Config/Configuration'
 import Logout from "./pages/Auth/Logout"
@@ -64,11 +64,9 @@ function App() {
           <Route element={<MainLayout></MainLayout>}>
             <Route element={<ProtectedRoutes isAuth={isAuth} redirectTo="/" />}>
               <Route path="/products" element={<Products></Products>} />
-              <Route path="/buzon" 
-                element={
-                  user?.user?.idusers === 1 ? <ChatWindow userId={user?.user?.idusers} /> : <UserChat userId={user?.user?.idusers} />
-                } 
-              />
+              <Route path="/buzon" element={<Buzon user={user}></Buzon>}>
+              </Route>
+              <Route path="chat/:userId" element={<UserChat></UserChat>}></Route>
             </Route>
             <Route path="/recetas" element={
               <ProtectedRoutes isAuth={isAuth && (permission == 1 || permission == 10)} redirectTo="/products">

@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Box, Typography, TextField, Button, List, ListItem, Paper, CircularProgress, IconButton
 } from '@mui/material';
@@ -7,9 +8,14 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import api from '../services/api';
 import { socket } from '../services/socket';
 import { jwtDecode } from 'jwt-decode';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import { ArrowBack } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
-export default function UserChat({ userId }) {
+export default function UserChat() {
   const ADMIN_ID = 1;
+  const { userId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [cursor, setCursor] = useState(null);
@@ -17,9 +23,29 @@ export default function UserChat({ userId }) {
   const [hasMore, setHasMore] = useState(true);
   const listRef = useRef();
   const fileInputRef = useRef();
+  const navigate = useNavigate()
 
   const token = JSON.parse(localStorage.getItem("token"));
   const user = token ? jwtDecode(token) : {};
+
+  const [availableHeight, setAvailableHeight] = useState(window.visualViewport.height);
+  console.log(availableHeight)
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Usamos setTimeout para dar tiempo al navegador a reajustar el viewport
+      setTimeout(() => {
+        const currentHeight = window.visualViewport.height;
+        setAvailableHeight(currentHeight);
+      }, 100);
+    };
+
+    window.visualViewport.addEventListener('resize', handleResize);
+
+    return () => {
+      window.visualViewport.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     socket.emit('join', userId);
@@ -217,112 +243,137 @@ export default function UserChat({ userId }) {
   };  
 
   return (
-    <Box sx={{ height: '92%', backgroundColor: '#ece5dd'}}>
-      <Paper
-        sx={{ flex: 1, p: 2, overflowY: 'auto', backgroundColor: '#e5ddd5', position:'relative', height: '87%' }}
-        ref={listRef}
-        onScroll={handleScroll}
-        elevation={0}
-      >
-        {loadingMore && (
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 1 }}>
-            <CircularProgress size={24} />
-          </Box>
-        )}
-  
-        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {messages.map((msg, index) => (
-            <ListItem
-              key={msg.id || index}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: msg.sender_id === userId ? 'flex-end' : 'flex-start',
-              }}
-            >
-              <Box
+    <div style={{height:`${availableHeight}px`, display:'flex', flexDirection:'column', position:'relative'}}>
+      <section className='navbar'>
+        <div className='navbar-container'>
+            <AppBar position="static" color='secondary' sx={{p:0.7}}>
+                <Toolbar variant="dense">
+                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={()=> navigate('/buzon')}>
+                    <ArrowBack />
+                </IconButton>
+                <div className='navbar-title'>
+                    <Typography variant="h6" color="inherit" component="div">
+                        Chat {userId}
+                    </Typography>
+                </div>
+                </Toolbar>
+            </AppBar>
+        </div>
+      </section>
+      <Box sx={{height:`${availableHeight - 30}px`, display:'flex', flex: 1, flexDirection:'column', backgroundColor: '#ece5dd', position:'relative'}}>
+        <Paper
+          sx={{
+            flex: '1 1 auto',       // Ocupa el espacio restante
+            overflowY: 'auto',      // Scroll vertical
+            paddingTop: 5,
+            paddingBottom: 10,
+            backgroundColor: '#e5ddd5',
+          }}
+          ref={listRef}
+          onScroll={handleScroll}
+          elevation={0}
+        >
+          {loadingMore && (
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 1 }}>
+              <CircularProgress size={24} />
+            </Box>
+          )}
+    
+          <List sx={{ display: 'flex', flexDirection: 'column', gap: 1}}>
+            {messages.map((msg, index) => (
+              <ListItem
+                key={msg.id || index}
                 sx={{
-                  backgroundColor: msg.sender_id === userId ? '#dcf8c6' : '#ffffff',
-                  color: '#000',
-                  px: 2,
-                  py: 1,
-                  borderRadius: 3,
-                  maxWidth: '100%',
-                  wordBreak: 'break-word',
-                  boxShadow: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: msg.sender_id === userId ? 'flex-end' : 'flex-start',
                 }}
               >
-                {renderMessageContent(msg)}
-              </Box>
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ mt: 0.5, fontSize: '0.7rem' }}
-              >
-                {msg.created_at ? formatDate(msg.created_at) : ''}
-              </Typography>
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
-  
-      <Box
-        sx={{
-          width:'100%',
-          height: '13%',
-          p: 1,
-          display: 'flex',
-          gap: 1,
-          alignItems: 'center',
-          backgroundColor: '#f0f0f0',
-          borderTop: '1px solid #ccc',
-        }}
-      >
-        <IconButton onClick={() => fileInputRef.current.click()} sx={{ color: '#075E54' }}>
-          <AttachFileIcon />
-        </IconButton>
-  
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Escribe un mensaje"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                <Box
+                  sx={{
+                    backgroundColor: msg.sender_id === userId ? '#dcf8c6' : '#ffffff',
+                    color: '#000',
+                    px: 2,
+                    py: 1,
+                    borderRadius: 3,
+                    maxWidth: '100%',
+                    wordBreak: 'break-word',
+                    boxShadow: 1,
+                  }}
+                >
+                  {renderMessageContent(msg)}
+                </Box>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ mt: 0.5, fontSize: '0.7rem' }}
+                >
+                  {msg.created_at ? formatDate(msg.created_at) : ''}
+                </Typography>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+    
+        <Box
           sx={{
-            backgroundColor: 'white',
-            borderRadius: '20px',
-            '& fieldset': { border: 'none' },
-            px: 2,
-            py: 1,
-          }}
-          inputProps={{
-            sx: { padding: '8px 14px' }
-          }}
-        />
-  
-        <Button
-          variant="contained"
-          onClick={handleSend}
-          sx={{
-            minWidth: '50px',
-            height: '50px',
-            borderRadius: '50%',
-            backgroundColor: '#25D366',
-            color: 'white',
-            '&:hover': { backgroundColor: '#20bd5a' },
+            width:'100%',
+            p: 1,
+            display: 'flex',
+            gap: 1,
+            alignItems: 'center',
+            backgroundColor: '#f0f0f0',
+            borderTop: '1px solid #ccc',
+            position:'fixed',
+            bottom:0
           }}
         >
-          <SendIcon sx={{ color: 'white' }} />
-        </Button>
-  
-        <input
-          type="file"
-          hidden
-          ref={fileInputRef}
-          onChange={handleFileChange}
-        />
+          <IconButton onClick={() => fileInputRef.current.click()} sx={{ color: '#075E54' }}>
+            <AttachFileIcon />
+          </IconButton>
+    
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Escribe un mensaje"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            sx={{
+              backgroundColor: 'white',
+              borderRadius: '20px',
+              '& fieldset': { border: 'none' },
+              px: 2,
+              py: 1,
+            }}
+            inputProps={{
+              sx: { padding: '8px 14px' }
+            }}
+          />
+    
+          <Button
+            variant="contained"
+            onClick={handleSend}
+            sx={{
+              minWidth: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              backgroundColor: '#25D366',
+              color: 'white',
+              '&:hover': { backgroundColor: '#20bd5a' },
+            }}
+          >
+            <SendIcon sx={{ color: 'white' }} />
+          </Button>
+    
+          <input
+            type="file"
+            hidden
+            ref={fileInputRef}
+            onChange={handleFileChange}
+          />
+        </Box>
       </Box>
-    </Box>
+    </div>
   );
 }

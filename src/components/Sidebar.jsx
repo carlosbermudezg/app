@@ -108,7 +108,7 @@ export default function Sidebar() {
 
   return (
     <div>
-      <Drawer open={isDrawerOpen} onClose={toggleDrawer(false)}>
+      <Drawer open={isDrawerOpen} sx={{zIndex:99999}} onClose={toggleDrawer(false)}>
         <section className='sidebar-card'>
           <div className='avatar'>
             <Avatar/>

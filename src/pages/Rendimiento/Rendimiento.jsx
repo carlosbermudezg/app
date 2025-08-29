@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { TextField, Autocomplete, Card, CardContent, Typography, Grid2 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Navbar from "../../components/Navbar";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import axios from "axios";
@@ -117,6 +118,7 @@ export default function Rendimiento() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Navbar></Navbar>
         <section className="rendimiento-container">
             <div className="rendimiento-wrap">
                 <section className="date-selector">

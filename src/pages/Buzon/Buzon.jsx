@@ -1,6 +1,11 @@
-const Buzon = ()=>{
+import ChatWindow from "../../components/ChatWindow"
+import Navbar from "../../components/Navbar"
+const Buzon = ({user})=>{
     return(
-        <section>Buzon</section>
+        <>
+            <Navbar></Navbar>
+            <ChatWindow userId={user?.user?.idusers}/>
+        </>
     )
 }
 
